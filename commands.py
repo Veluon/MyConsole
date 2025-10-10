@@ -30,15 +30,38 @@ def need_vfs(): # проверка, что vfs подключен
 
 @command("ls") # текущая директория
 def cmd_ls(path="."):
-    pass
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    try:
+        return "\n".join(vfs.listdir(path))
+    except Exception as e:
+        return f"Ошибка ls: {e}"
 
 @command("cd") # смена директории
 def cmd_cd(path=None):
-    pass
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    if not path:
+        return "Usage: cd <path>"
+    try:
+        vfs.chdir(path)
+        return vfs.getcwd()
+    except Exception as e:
+        return f"Ошибка cd: {e}"
 
 @command("cat") # вывод содержимого файла
 def cmd_cat(path=None):
-    pass
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    if not path:
+        return "Usage: cat <path>"
+    try:
+        return vfs.read_text(path)
+    except Exception as e:
+        return f"Ошибка cat: {e}"
 
 @command("mkdir") # создать директорию
 def cmd_mkdir(path=None):
@@ -60,16 +83,7 @@ def cmd_write(path=None, *text):
 
 @command("rm") # удалить файл или пустую директорию
 def cmd_rm(path=None):
-    ok, err = need_vfs()
-    if not ok:
-        return f"Ошибка: {err}"
-    if not path:
-        return "Usage: rm <path>"
-    try:
-        vfs.remove(path)
-        return "ok"
-    except Exception as e:
-        return f"Ошибка rm: {e}"
+    pass
 
 @command("rmdir") # удалить директорию
 def cmd_rmdir(path=None):
@@ -77,11 +91,14 @@ def cmd_rmdir(path=None):
 
 @command("uname") # вывести имя
 def cmd_uname():
-    pass
+    u = platform.uname()
+    return f"{u.system} {u.node} {u.release}"
 
 @command("history") # история комманд
 def cmd_history():
-    pass
+    global HISTORY
+    lines = HISTORY
+    return "\n".join(lines)
 
 @command("help") # вывести отсортированный список комманд
 def cmd_help(*args):

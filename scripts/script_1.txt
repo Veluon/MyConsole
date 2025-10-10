@@ -1,5 +1,11 @@
 help
-
+uname
 echo ECHOOO
-
+ls
+cd docs
+ls
+cat notes.txt
+cd /home/user
+ls
+history
 unknown_command_here

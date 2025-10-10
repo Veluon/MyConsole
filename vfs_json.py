@@ -86,7 +86,19 @@ class JSONVFS:
 
     # (ls) возвращает открытый каталог
     def listdir(self, path = "/"):
-        pass
+        abs_path = self.abspath(path) # получаем абсолютный путь
+        if abs_path == "/": # если корень - берем корневой узел
+            node = self.root
+        else: # иначе
+            parent, name = self._walk_parent(abs_path) # находим родит. узел и конечный элемент
+            if not parent: # если нет родителя - поднимаем ошибку
+                raise FileNotFoundError(path)
+
+            node = parent.get("entries", {}).get(name) # находим нужный элемент в родителе
+
+        if not node or node.get("type") != "dir": # если не директория - поднимаем ошибку
+            raise NotADirectoryError(path)
+        return sorted(list(node.get("entries", {}).keys())) # выводим отсортированный список элементов узла
 
     # чтение из base64
     def read_bytes(self, path):
@@ -163,7 +175,10 @@ class JSONVFS:
 
     # (cd) смена текущей рабочей директории
     def chdir(self, path):
-        pass
+        new = self.abspath(path) # получаем абсолютный путь до нового расположения
+        if not self.is_dir(new): # если путь не до директории - ошибка
+            raise NotADirectoryError(new)
+        self.cwd = new # иначе - присвоение новой рабочей директории
 
     # получить текущую рабочую директорию
     def getcwd(self):
