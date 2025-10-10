@@ -1,0 +1,46 @@
+{
+  "cwd": "/home/user",
+  "root": {
+    "type": "dir",
+    "entries": {
+      "home": {
+        "type": "dir",
+        "entries": {
+          "user": {
+            "type": "dir",
+            "entries": {
+              "docs": {
+                "type": "dir",
+                "entries": {
+                  "folder1": {
+                    "type": "dir",
+                    "entries": {
+                      "folder2": {
+                        "type": "dir",
+                        "entries": {
+                          "folder3": {
+                            "type": "dir",
+                            "entries": {
+                              "text.txt": {
+                                "type": "file",
+                                "data": "TU9SRSBURVhU"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "bin": {
+                "type": "dir",
+                "entries": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

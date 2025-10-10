@@ -1,0 +1,35 @@
+{
+  "cwd": "/home/user",
+  "root": {
+    "type": "dir",
+    "entries": {
+      "home": {
+        "type": "dir",
+        "entries": {
+          "user": {
+            "type": "dir",
+            "entries": {
+              "docs": {
+                "type": "dir",
+                "entries": {
+                  "notes.txt": {
+                    "type": "file",
+                    "data": "VGV4dA=="
+                  }
+                }
+              },
+              "bin": {
+                "type": "dir",
+                "entries": {}
+              },
+              "folder": {
+                "type": "dir",
+                "entries": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

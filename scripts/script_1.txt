@@ -1,3 +1,5 @@
 help
 
+echo ECHOOO
+
 unknown_command_here
