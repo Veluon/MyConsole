@@ -1,0 +1,10 @@
+ls
+cd docs
+ls
+cd folder1/folder2/folder3
+ls
+cat text.txt
+write text.txt MY_TEXT
+cat text.txt
+rm text.txt
+ls

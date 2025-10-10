@@ -1,0 +1,10 @@
+ls
+rmdir folder1
+ls
+mkdir folder4
+ls
+mkdir folder1
+ls
+mkdir folder2
+# до сюда не дойдет из-за ошибки
+ls

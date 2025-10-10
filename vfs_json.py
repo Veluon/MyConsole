@@ -143,7 +143,21 @@ class JSONVFS:
 
     # создание директории
     def mkdir(self, path, exist_ok=False):
-        pass
+        # находим родит. узел и конечный элемент (создаем узлы при необходимости)
+        parent, name = self._walk_parent(path, create=True)
+        if not parent: # если нет родителя - поднимаем ошибку
+            raise FileNotFoundError(path)
+
+        entries = parent.setdefault("entries", {}) # берем по ключу entries или задаем пустой словарь
+
+        if name in entries: # если уже существует такой элемент
+            if entries[name].get("type") == "dir": # если это директория
+                if exist_ok: # если не считаем ошибкой (по умолчанию ошибка)
+                    return # ничего
+                raise FileExistsError(path) # иначе ошибка
+            raise FileExistsError(path)
+
+        entries[name] = {"type": "dir", "entries": {}} # создаем директорию
 
     # удалить элемент VFS
     def remove(self, path):
@@ -162,7 +176,18 @@ class JSONVFS:
 
     # удаление директории
     def rmdir(self, path):
-        pass
+        parent, name = self._walk_parent(path) # находим родит. узел и конечный элемент
+        # если нет родителя или элемента - ошибка
+        if not parent or name not in parent.get("entries", {}):
+            raise FileNotFoundError(path)
+
+        node = parent["entries"][name] # берем найденный элемент по ключу
+
+        if node.get("type") != "dir": # если не директория - ошибка
+            raise NotADirectoryError(path)
+        if node.get("entries"): # если не пустая директория - ошибка
+            raise OSError("Directory not empty")
+        del parent["entries"][name] # удаляем элемент из словаря родителя
 
     # получить абсолютный путь
     def abspath(self, path):

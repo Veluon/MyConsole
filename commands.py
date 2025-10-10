@@ -21,6 +21,22 @@ def cmd_exit():
 def cmd_echo(*args):
     return " ".join(args) if args else ""
 
+@command("uname") # вывести имя
+def cmd_uname():
+    u = platform.uname()
+    return f"{u.system} {u.node} {u.release}"
+
+@command("history") # история комманд
+def cmd_history():
+    global HISTORY
+    lines = HISTORY
+    return "\n".join(lines)
+
+@command("help") # вывести отсортированный список комманд
+def cmd_help(*args):
+    names = sorted(COMMANDS.keys())
+    return "Доступные команды: " + ", ".join(names)
+
 # КОМАНДЫ РАБОТАЮЩИЕ С VFS
 
 def need_vfs(): # проверка, что vfs подключен
@@ -65,7 +81,16 @@ def cmd_cat(path=None):
 
 @command("mkdir") # создать директорию
 def cmd_mkdir(path=None):
-    pass
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    if not path:
+        return "Usage: mkdir <path>"
+    try:
+        vfs.mkdir(path, exist_ok=False)
+        return "ok"
+    except Exception as e:
+        return f"Ошибка mkdir: {e}"
 
 @command("write") # записать текст в файл
 def cmd_write(path=None, *text):
@@ -83,28 +108,29 @@ def cmd_write(path=None, *text):
 
 @command("rm") # удалить файл или пустую директорию
 def cmd_rm(path=None):
-    pass
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    if not path:
+        return "Usage: rm <path>"
+    try:
+        vfs.remove(path)
+        return "ok"
+    except Exception as e:
+        return f"Ошибка rm: {e}"
 
 @command("rmdir") # удалить директорию
 def cmd_rmdir(path=None):
-    pass
-
-@command("uname") # вывести имя
-def cmd_uname():
-    u = platform.uname()
-    return f"{u.system} {u.node} {u.release}"
-
-@command("history") # история комманд
-def cmd_history():
-    global HISTORY
-    lines = HISTORY
-    return "\n".join(lines)
-
-@command("help") # вывести отсортированный список комманд
-def cmd_help(*args):
-    names = sorted(COMMANDS.keys())
-    return "Доступные команды: " + ", ".join(names)
-
+    ok, err = need_vfs()
+    if not ok:
+        return f"Ошибка: {err}"
+    if not path:
+        return "Usage: rmdir <path>"
+    try:
+        vfs.rmdir(path)
+        return "ok"
+    except Exception as e:
+        return f"Ошибка rmdir: {e}"
 
 @command("save") # комманда разработчика для сохранения json для радактирования
 def cmd_save(name=None):
